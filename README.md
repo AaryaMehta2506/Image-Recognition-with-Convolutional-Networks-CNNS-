@@ -1,78 +1,52 @@
 Data Science Intermediate Project
 # Image Recognition with Convolutional Networks (CNNS)
 
-## Project Overview
-This project builds a Fake News Detection System trained on a dataset containing real and fake news articles. It uses TF-IDF vectorization and a Logistic Regression or Naive Bayes classifier to analyze the textual patterns of news content. The system is deployed with Streamlit for easy interaction — users can enter a news statement and instantly see if it’s fake or real, along with a confidence score.
+This project uses a Convolutional Neural Network (CNN) built with TensorFlow and Keras to classify images from the CIFAR-10 dataset into 10 different categories. It also includes a Streamlit web application that allows users to upload an image and get real-time predictions.
 
-## Key Features
-- Text preprocessing with cleaning, stopword removal, and lemmatization
-- TF-IDF vectorization for feature extraction
-- Model trained to achieve around 98–99% accuracy
-- Streamlit web interface for real-time predictions
-- Confidence score displayed for each prediction
-- Automatically loads a trained model (or trains one if not found)
+## Dataset
+Dataset: https://www.kaggle.com/datasets/fedesoriano/cifar10-python-in-csv    (train.csv, test.csv files was downloaded)
+CIFAR-10 contains 60,000 32×32 color images across 10 classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, and truck.  
+The dataset is loaded automatically using:
+from tensorflow.keras.datasets import cifar10
 
-## Why Some True Statements Are Flagged as Fake
-Short or overly simple sentences such as "Donald Trump is a president of America" may be predicted as fake because the model was trained mostly on full-length news articles. It assumes "fake" when:
-- The text resembles clickbait or incomplete statements seen in fake samples
-- The statement lacks journalistic context such as sources or structure
-- The model detects political figure mentions that often correlated with fake news in the dataset
+## Model Architecture
+The CNN consists of convolutional layers with ReLU activation, batch normalization for stable training, max pooling and dropout for regularization, fully connected dense layers, and a softmax output for 10-class classification.  
+Data augmentation (random rotation, shift, and flip) is applied to improve generalization.
 
-To improve predictions, provide more context. For example:
-"Donald Trump served as the 45th President of the United States, according to official records."
-This provides linguistic structure and facts, which help the model classify more accurately.
+## Training
+The model is trained using:
+Optimizer: Adam  
+Loss: Sparse Categorical Crossentropy  
+Epochs: 50  
+Batch size: 64  
+After training, the model achieves around 85–90% test accuracy.  
+The trained model is saved as:
+cifar10_cnn_model_augmented.h5
 
-## Tech Stack
-- Python 3
-- Pandas, NumPy
-- NLTK (for stopwords and lemmatization)
-- Scikit-learn (for TF-IDF and model training)
-- Streamlit (for deployment)
-- Joblib (for saving/loading models)
+## Streamlit Web App
+The Streamlit app lets you upload any image (JPEG/PNG). It preprocesses the image, resizes it to 32×32, and predicts the top 3 likely classes with confidence scores.
 
-## Dataset 
-link : https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
+Run the app:
+streamlit run app.py
 
-## Folder Structure
-Fake-News-Detection/
-│
-├── fake_news_detection.ipynb   # Model training and evaluation
-├── app.py                      # Streamlit application
-├── vectorizer.pkl              # Saved TF-IDF vectorizer
-├── model.pkl                   # Saved ML model
-├── true.csv                    # True news dataset
-├── fake.csv                    # Fake news dataset
-└── README.md                   # Project documentation
+Example Prediction Output:
+Predictions:
+dog — confidence: 89.21%
+cat — confidence: 7.35%
+horse — confidence: 3.12%
 
-## How to Run
-1. Install dependencies
-   pip install -r requirements.txt
+## File Structure
+image_recognition_cnn.ipynb     # Model training and evaluation  
+app.py                          # Streamlit interface for prediction  
+cifar10_cnn_model_augmented.h5  # Trained model file  
+README.md                       # Project documentation
 
-2. Run the Streamlit app
-   streamlit run app.py
+## Customization
+You can train this model on your own dataset by modifying the data loading section in the notebook or replacing the CIFAR-10 dataset with your own labeled images.
 
-3. Interact with the app  
-   Enter any news content and click "Check News" to get:
-   - Real or Fake label
-   - Confidence percentage
-
-## Model Performance
-Accuracy: 98.8%  
-Precision: 0.99  
-Recall: 0.99  
-F1-score: 0.99  
-
-## Example Predictions
-Input: "The U.S. Senate passed a new infrastructure bill on Tuesday."  
-Output: Real News (Confidence: 97%)
-
-Input: "NASA confirms Earth will go dark for 15 days next month."  
-Output: Fake News (Confidence: 99%)
-
-## Future Improvements
-- Add multiple ML models for comparison
-- Include article source verification
-- Integrate live fact-checking API
+## Requirements
+Install all dependencies with:
+pip install tensorflow numpy matplotlib streamlit pillow
 
 ## Contributing
 Contributions are welcome!
